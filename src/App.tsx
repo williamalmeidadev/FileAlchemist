@@ -12,6 +12,8 @@ import {
   persistLanguage,
   type Language,
 } from "./lib/i18n";
+import logoDark from "./assets/FileAlchemist.png";
+import logoLight from "./assets/FileAlchemistWhite.png";
 import { downloadZip } from "./lib/zip";
 import type { ConvertSettings, WorkerMessage } from "./types/image";
 import type { JobItem } from "./types/job";
@@ -258,8 +260,11 @@ export default function App() {
     <div className="app">
       <header className="app__header">
         <div className="brand">
-          <h1 className="brand__title">{copy.brandTitle}</h1>
-          <p className="brand__subtitle">{copy.brandSubtitle}</p>
+          <img
+            className="brand__logo"
+            src={theme === "dark" ? logoLight : logoDark}
+            alt="FileAlchemist logo"
+          />
         </div>
 
         <div className="header__actions">
