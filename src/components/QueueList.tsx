@@ -13,7 +13,7 @@ function formatOutputLabel(job: JobItem): string {
     : job.file.type.includes("webp")
     ? "WEBP"
     : "JPG";
-  const outputFormat = job.outputFormat ?? "png";
+  const outputFormat = job.settings?.outputFormat ?? job.outputFormat ?? "png";
   const output = outputFormat === "jpeg" ? "JPG" : outputFormat.toUpperCase();
   return `${input} → ${output}`;
 }
