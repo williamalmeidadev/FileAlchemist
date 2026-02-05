@@ -2,6 +2,35 @@
   font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
   color: #0f172a;
   background: #f8fafc;
+  color-scheme: light;
+}
+
+:root[data-theme="light"] {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --muted: #64748b;
+  --text: #0f172a;
+  --accent: #0f172a;
+  --accent-soft: #e2e8f0;
+  --panel-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --drop-bg: #f1f5f9;
+  --drop-border: #cbd5f5;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0b1120;
+  --surface: #111827;
+  --border: #1f2937;
+  --muted: #94a3b8;
+  --text: #e2e8f0;
+  --accent: #e2e8f0;
+  --accent-soft: #1f2937;
+  --panel-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  --drop-bg: #0f172a;
+  --drop-border: #334155;
+  color-scheme: dark;
 }
 
 * {
@@ -10,16 +39,19 @@
 
 body {
   margin: 0;
+  background: var(--bg);
+  color: var(--text);
 }
 
 h1,
 h2 {
   margin: 0 0 8px;
+  color: var(--text);
 }
 
 p {
   margin: 0 0 8px;
-  color: #475569;
+  color: var(--muted);
 }
 
 .app {
@@ -36,12 +68,25 @@ p {
   margin-bottom: 32px;
 }
 
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+.header__right {
+  display: grid;
+  gap: 12px;
+  justify-items: end;
+}
+
 .summary {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
   font-size: 14px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .app__main {
@@ -51,11 +96,11 @@ p {
 }
 
 .panel {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--panel-shadow);
   display: grid;
   gap: 12px;
 }
@@ -68,7 +113,7 @@ p {
 
 .helper {
   font-size: 12px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .btn {
@@ -76,36 +121,42 @@ p {
   border: none;
   border-radius: 999px;
   padding: 10px 18px;
-  background: #0f172a;
-  color: #ffffff;
+  background: var(--accent);
+  color: var(--bg);
   font-weight: 600;
   cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 .btn--ghost {
   background: transparent;
-  color: #0f172a;
-  border: 1px solid #e2e8f0;
+  color: var(--text);
+  border: 1px solid var(--border);
 }
 
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
+}
+
+.btn:not(:disabled):hover {
+  transform: translateY(-1px);
 }
 
 .dropzone {
-  border: 2px dashed #cbd5f5;
+  border: 2px dashed var(--drop-border);
   border-radius: 16px;
   padding: 24px;
   text-align: center;
-  background: #f1f5f9;
+  background: var(--drop-bg);
   transition: border-color 0.2s ease, background 0.2s ease;
   cursor: pointer;
 }
 
 .dropzone--active {
-  border-color: #0f172a;
-  background: #e2e8f0;
+  border-color: var(--accent);
+  background: var(--accent-soft);
 }
 
 .dropzone__input {
@@ -114,7 +165,7 @@ p {
 
 .dropzone__title {
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text);
   margin-bottom: 4px;
 }
 
@@ -138,9 +189,10 @@ input,
 select {
   padding: 8px 10px;
   border-radius: 10px;
-  border: 1px solid #e2e8f0;
-  background: #ffffff;
+  border: 1px solid var(--border);
+  background: var(--surface);
   font-size: 14px;
+  color: var(--text);
 }
 
 .queue {
@@ -154,8 +206,8 @@ select {
   gap: 12px;
   padding: 12px;
   border-radius: 12px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--drop-bg);
+  border: 1px solid var(--border);
 }
 
 .queue__meta {
@@ -170,7 +222,7 @@ select {
 
 .queue__sizes {
   font-size: 12px;
-  color: #64748b;
+  color: var(--muted);
   display: flex;
   gap: 8px;
 }
@@ -178,7 +230,7 @@ select {
 .queue__status {
   text-transform: capitalize;
   font-size: 12px;
-  color: #64748b;
+  color: var(--muted);
 }
 
 .queue__actions {
@@ -189,6 +241,12 @@ select {
 }
 
 .queue__error {
-  color: #b91c1c;
+  color: #ef4444;
   font-size: 12px;
+}
+
+@media (max-width: 720px) {
+  .header__right {
+    justify-items: start;
+  }
 }
