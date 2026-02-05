@@ -134,17 +134,10 @@ p {
   transform: translateY(-1px);
 }
 
-.header__panel {
-  display: grid;
-  gap: 10px;
-  justify-items: end;
-  min-width: 320px;
-}
-
 .chips {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 8px;
 }
 
@@ -191,7 +184,6 @@ p {
 
 .progress {
   width: 100%;
-  max-width: 340px;
   height: 10px;
   border-radius: 999px;
   background: var(--surface-2);
@@ -209,7 +201,6 @@ p {
 
 .progress__meta {
   width: 100%;
-  max-width: 340px;
   display: flex;
   justify-content: space-between;
   font-size: 12px;
@@ -271,6 +262,10 @@ p {
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s ease, opacity 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn--ghost {
@@ -389,6 +384,37 @@ select {
   gap: 8px;
 }
 
+.queue__format {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--border);
+}
+
+.status-dot--pending {
+  background: #f59e0b;
+}
+
+.status-dot--processing {
+  background: #3b82f6;
+}
+
+.status-dot--done {
+  background: #22c55e;
+}
+
+.status-dot--error {
+  background: #ef4444;
+}
+
 .queue__status {
   text-transform: capitalize;
   font-size: 12px;
@@ -443,18 +469,8 @@ select {
     grid-template-columns: 1fr;
   }
 
-  .header__panel {
-    justify-items: start;
-    min-width: auto;
-  }
-
-  .chips {
-    justify-content: flex-start;
-  }
-
-  .progress,
-  .progress__meta {
-    max-width: 100%;
+  .iconbtn {
+    justify-self: start;
   }
 }
 
