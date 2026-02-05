@@ -10,4 +10,5 @@ export interface JobItem {
   result?: ConvertResult;
   downloadUrl?: string;
   outputFormat?: OutputFormat;
+  previewUrl?: string;
 }
