@@ -74,7 +74,7 @@ export default function App() {
           ? {
               ...job,
               status: "processing",
-              outputFormat: settingsRef.current.outputFormat,
+              outputFormat: nextJob.settings?.outputFormat ?? settingsRef.current.outputFormat,
               error: undefined,
             }
           : job
@@ -84,7 +84,7 @@ export default function App() {
     worker.postMessage({
       id: nextJob.id,
       file: nextJob.file,
-      settings: settingsRef.current,
+      settings: nextJob.settings ?? settingsRef.current,
     });
   }, [updateJobs]);
 
@@ -154,6 +154,8 @@ export default function App() {
         file,
         status: "pending",
         previewUrl: URL.createObjectURL(file),
+        settings: settingsRef.current,
+        outputFormat: settingsRef.current.outputFormat,
       })),
     ]);
   };
@@ -233,7 +235,7 @@ export default function App() {
   };
 
   const getOutputName = (job: JobItem): string => {
-    const format = job.outputFormat ?? settings.outputFormat;
+    const format = job.settings?.outputFormat ?? job.outputFormat ?? settings.outputFormat;
     const extension = format === "jpeg" ? "jpg" : format;
     const baseName = job.file.name.replace(/\.[^.]+$/, "");
     return `${baseName}.${extension}`;

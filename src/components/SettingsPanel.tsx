@@ -47,23 +47,24 @@ export default function SettingsPanel({ settings, onChange, webpSupported }: Set
         </select>
       </div>
 
-      <div className="field">
-        <label htmlFor="quality">Quality ({quality}%)</label>
-        <input
-          id="quality"
-          type="range"
-          min={0}
-          max={100}
-          value={quality}
-          disabled={settings.outputFormat === "png"}
-          onChange={(event) =>
-            onChange({
-              ...settings,
-              quality: Number(event.target.value) / 100,
-            })
-          }
-        />
-      </div>
+      {(settings.outputFormat === "jpeg" || settings.outputFormat === "webp") && (
+        <div className="field">
+          <label htmlFor="quality">Quality ({quality}%)</label>
+          <input
+            id="quality"
+            type="range"
+            min={0}
+            max={100}
+            value={quality}
+            onChange={(event) =>
+              onChange({
+                ...settings,
+                quality: Number(event.target.value) / 100,
+              })
+            }
+          />
+        </div>
+      )}
 
       {settings.outputFormat === "jpeg" && (
         <div className="field">
