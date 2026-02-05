@@ -35,7 +35,9 @@ export default function Dropzone({
 
   return (
     <div
-      className={`dropzone ${isDragging ? "dropzone--active" : ""}`}
+      className={`grid place-items-center rounded-2xl border-2 border-dashed border-[var(--drop-border)] bg-[var(--drop-bg)] p-6 text-center transition ${
+        isDragging ? "border-[var(--accent)] bg-[var(--accent-soft)]" : ""
+      }`}
       onDragEnter={(event) => {
         event.preventDefault();
         setIsDragging(true);
@@ -62,11 +64,11 @@ export default function Dropzone({
         accept={accept}
         disabled={disabled}
         onChange={(event) => handleFiles(event.target.files)}
-        className="dropzone__input"
+        className="hidden"
       />
-      <div className="dropzone__content">
-        <p className="dropzone__title">{title}</p>
-        <p className="dropzone__subtitle">{subtitle}</p>
+      <div className="grid gap-1">
+        <p className="text-base font-semibold text-[var(--text)]">{title}</p>
+        <p className="text-sm text-[var(--muted)]">{subtitle}</p>
       </div>
     </div>
   );

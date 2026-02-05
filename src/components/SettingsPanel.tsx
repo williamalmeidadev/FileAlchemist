@@ -40,17 +40,22 @@ export default function SettingsPanel({
   const quality = Math.round((settings.quality ?? 0.92) * 100);
 
   return (
-    <section className="panel">
-      <div className="panel__title">
-        <h2>{copy.settingsTitle}</h2>
-        <button type="button" className="btn btn--ghost btn--sm" onClick={onReset}>
+    <section className="grid gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-soft)]">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-lg font-semibold">{copy.settingsTitle}</h2>
+        <button
+          type="button"
+          className="inline-flex items-center justify-center rounded-full border border-[var(--border)] px-3 py-1 text-xs font-semibold text-[var(--text)] transition hover:-translate-y-0.5"
+          onClick={onReset}
+        >
           {copy.resetSettings}
         </button>
       </div>
-      <div className="field">
+      <div className="grid gap-2 text-sm">
         <label htmlFor="output-format">{copy.outputFormat}</label>
         <select
           id="output-format"
+          className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2"
           value={settings.outputFormat}
           onChange={(event) =>
             onChange({
@@ -70,7 +75,7 @@ export default function SettingsPanel({
       </div>
 
       {(settings.outputFormat === "jpeg" || settings.outputFormat === "webp") && (
-        <div className="field">
+        <div className="grid gap-2 text-sm">
           <label htmlFor="quality">
             {copy.quality} ({quality}%)
           </label>
@@ -80,6 +85,7 @@ export default function SettingsPanel({
             min={0}
             max={100}
             value={quality}
+            className="range-input"
             onChange={(event) =>
               onChange({
                 ...settings,
@@ -91,12 +97,13 @@ export default function SettingsPanel({
       )}
 
       {settings.outputFormat === "jpeg" && (
-        <div className="field">
+        <div className="grid gap-2 text-sm">
           <label htmlFor="background">{copy.jpegBackground}</label>
-          <div className="color-field">
+          <div className="flex flex-wrap items-center gap-3">
             <input
               id="background"
               type="color"
+              className="h-10 w-16 cursor-pointer rounded-lg border border-[var(--border)] bg-transparent"
               value={settings.background ?? "#ffffff"}
               onChange={(event) =>
                 onChange({
@@ -106,7 +113,7 @@ export default function SettingsPanel({
               }
             />
             <span
-              className="color-preview"
+              className="h-6 w-6 rounded-md border border-[var(--border)]"
               style={{ backgroundColor: settings.background ?? "#ffffff" }}
               aria-hidden="true"
             />
@@ -114,14 +121,15 @@ export default function SettingsPanel({
         </div>
       )}
 
-      <div className="field-row">
-        <div className="field">
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-2 text-sm">
           <label htmlFor="resize-width">{copy.width}</label>
           <input
             id="resize-width"
             type="number"
             min={1}
             placeholder="Auto"
+            className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2"
             value={settings.resize?.width ?? ""}
             onChange={(event) =>
               onChange({
@@ -134,13 +142,14 @@ export default function SettingsPanel({
             }
           />
         </div>
-        <div className="field">
+        <div className="grid gap-2 text-sm">
           <label htmlFor="resize-height">{copy.height}</label>
           <input
             id="resize-height"
             type="number"
             min={1}
             placeholder="Auto"
+            className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2"
             value={settings.resize?.height ?? ""}
             onChange={(event) =>
               onChange({
@@ -155,13 +164,14 @@ export default function SettingsPanel({
         </div>
       </div>
 
-      <div className="field">
+      <div className="grid gap-2 text-sm">
         <label htmlFor="max-dimension">{copy.maxDimension}</label>
         <input
           id="max-dimension"
           type="number"
           min={1}
           max={MAX_DIMENSION}
+          className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2"
           value={settings.resize?.maxDimension ?? MAX_DIMENSION}
           onChange={(event) =>
             onChange({
