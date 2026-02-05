@@ -88,6 +88,15 @@ p {
   max-width: 560px;
 }
 
+.brand__logo {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
 .brand__top {
   display: flex;
   align-items: center;
