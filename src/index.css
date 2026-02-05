@@ -89,9 +89,9 @@ p {
 }
 
 .brand__logo {
-  height: 48px;
+  height: 84px;
   width: auto;
-  max-width: 220px;
+  max-width: 360px;
   object-fit: contain;
   object-position: left center;
 }
