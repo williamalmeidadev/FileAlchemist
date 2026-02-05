@@ -51,6 +51,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
+  min-height: 100vh;
 }
 
 h1,
@@ -70,6 +71,7 @@ p {
   padding: 32px 20px 60px;
   display: grid;
   gap: 24px;
+  min-height: 100vh;
 }
 
 .app__header {
