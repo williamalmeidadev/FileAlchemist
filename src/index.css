@@ -367,6 +367,8 @@ select {
   background: var(--surface);
   font-size: 14px;
   color: var(--text);
+  width: 100%;
+  min-width: 0;
 }
 
 .btn--sm {
@@ -378,6 +380,7 @@ select {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .color-preview {
@@ -568,6 +571,14 @@ select {
 
   .panel {
     padding: 16px;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .color-field {
+    align-items: flex-start;
   }
 
   .panel__actions {
