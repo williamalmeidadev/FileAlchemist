@@ -191,6 +191,22 @@ export default function App() {
     return { total, done, pending, errors };
   }, [jobs]);
 
+  const progress = useMemo(() => {
+    const total = jobs.length || 1;
+    const done = jobs.filter((job) => job.status === "done").length;
+    const error = jobs.filter((job) => job.status === "error").length;
+    const processing = jobs.filter((job) => job.status === "processing").length;
+    const completed = done + error;
+    return {
+      pct: Math.round((completed / total) * 100),
+      done,
+      error,
+      processing,
+      completed,
+      total: jobs.length,
+    };
+  }, [jobs]);
+
   const doneJobs = useMemo(
     () => jobs.filter((job) => job.status === "done" && job.result),
     [jobs]
@@ -206,26 +222,49 @@ export default function App() {
   return (
     <div className="app">
       <header className="app__header">
-        <div className="header__left">
-          <p className="eyebrow">Private image converter</p>
-          <h1>FileAlchemist</h1>
-          <p>Convert images locally. No uploads, no servers.</p>
-        </div>
-        <div className="header__right">
-          <div className="summary">
-            <span>Total: {summary.total}</span>
-            <span>Pending: {summary.pending}</span>
-            <span>Done: {summary.done}</span>
-            <span>Errors: {summary.errors}</span>
+        <div className="brand">
+          <div className="brand__top">
+            <span className="badge">Private • Local</span>
+            <button
+              type="button"
+              className="iconbtn"
+              onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
+              aria-label="Toggle theme"
+              title="Toggle theme"
+            >
+              {theme === "dark" ? "☀️" : "🌙"}
+            </button>
           </div>
-          <button
-            type="button"
-            className="btn btn--ghost"
-            onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
-            aria-label="Toggle theme"
-          >
-            {theme === "dark" ? "Light theme" : "Dark theme"}
-          </button>
+
+          <h1 className="brand__title">FileAlchemist</h1>
+          <p className="brand__subtitle">Convert PNG/JPG/WebP locally. No uploads.</p>
+        </div>
+
+        <div className="header__panel">
+          <div className="chips" aria-label="Queue summary">
+            <span className="chip">
+              <span className="dot dot--muted" /> Total <b>{summary.total}</b>
+            </span>
+            <span className="chip">
+              <span className="dot dot--warn" /> Pending <b>{summary.pending}</b>
+            </span>
+            <span className="chip">
+              <span className="dot dot--ok" /> Done <b>{summary.done}</b>
+            </span>
+            <span className="chip">
+              <span className="dot dot--bad" /> Errors <b>{summary.errors}</b>
+            </span>
+          </div>
+
+          <div className="progress">
+            <div className="progress__bar" style={{ width: `${progress.pct}%` }} />
+          </div>
+          <div className="progress__meta">
+            <span>{progress.pct}%</span>
+            <span>
+              {progress.completed}/{progress.total || 0} processed
+            </span>
+          </div>
         </div>
       </header>
 
@@ -244,10 +283,7 @@ export default function App() {
               onClick={handleConvert}
               disabled={!jobs.length || isConverting}
             >
-              Convert
-            </button>
-            <button type="button" className="btn btn--ghost" onClick={handleClear}>
-              Clear
+              {isConverting ? "Converting…" : "Convert"}
             </button>
             <button
               type="button"
@@ -255,7 +291,15 @@ export default function App() {
               onClick={handleDownloadZip}
               disabled={!doneJobs.length || isZipping}
             >
-              Download ZIP
+              {isZipping ? "Zipping…" : "Download ZIP"}
+            </button>
+            <button
+              type="button"
+              className="btn btn--danger"
+              onClick={handleClear}
+              disabled={!jobs.length}
+            >
+              Clear
             </button>
           </div>
           <p className="helper">
@@ -263,7 +307,18 @@ export default function App() {
           </p>
           </div>
 
-          <QueueList jobs={jobs} getOutputName={getOutputName} />
+          {!jobs.length ? (
+            <div className="empty">
+              <div className="empty__card">
+                <p className="empty__title">No files yet</p>
+                <p className="empty__subtitle">
+                  Drop PNG/JPG/WebP to start. Everything stays on your device.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <QueueList jobs={jobs} getOutputName={getOutputName} />
+          )}
         </section>
 
         <section className="right-stack">
