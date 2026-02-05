@@ -12,6 +12,16 @@ body {
   margin: 0;
 }
 
+h1,
+h2 {
+  margin: 0 0 8px;
+}
+
+p {
+  margin: 0 0 8px;
+  color: #475569;
+}
+
 .app {
   max-width: 1100px;
   margin: 0 auto;
@@ -19,25 +29,25 @@ body {
 }
 
 .app__header {
-  display: grid;
-  gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
   margin-bottom: 32px;
 }
 
-.app__header h1 {
-  font-size: 32px;
-  margin: 0;
-}
-
-.app__header p {
-  margin: 0;
-  color: #475569;
+.summary {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: #64748b;
 }
 
 .app__main {
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
 .panel {
@@ -45,11 +55,20 @@ body {
   border: 1px solid #e2e8f0;
   border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  display: grid;
+  gap: 12px;
 }
 
-.panel h2 {
-  margin-top: 0;
+.panel__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.helper {
+  font-size: 12px;
+  color: #64748b;
 }
 
 .btn {
@@ -60,8 +79,116 @@ body {
   background: #0f172a;
   color: #ffffff;
   font-weight: 600;
+  cursor: pointer;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
 }
 
 .btn:disabled {
   opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dropzone {
+  border: 2px dashed #cbd5f5;
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  background: #f1f5f9;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  cursor: pointer;
+}
+
+.dropzone--active {
+  border-color: #0f172a;
+  background: #e2e8f0;
+}
+
+.dropzone__input {
+  display: none;
+}
+
+.dropzone__title {
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.dropzone__subtitle {
+  font-size: 14px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+input,
+select {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  font-size: 14px;
+}
+
+.queue {
+  display: grid;
+  gap: 12px;
+}
+
+.queue__item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.queue__meta {
+  display: grid;
+  gap: 4px;
+}
+
+.queue__name {
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.queue__sizes {
+  font-size: 12px;
+  color: #64748b;
+  display: flex;
+  gap: 8px;
+}
+
+.queue__status {
+  text-transform: capitalize;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.queue__actions {
+  display: grid;
+  gap: 6px;
+  justify-items: end;
+  align-content: start;
+}
+
+.queue__error {
+  color: #b91c1c;
+  font-size: 12px;
 }
