@@ -165,7 +165,7 @@ export default function App() {
       ...accepted.map((file) => ({
         id: createId(),
         file,
-        status: "pending",
+        status: "pending" as const,
         previewUrl: URL.createObjectURL(file),
         settings: settingsRef.current,
         outputFormat: settingsRef.current.outputFormat,

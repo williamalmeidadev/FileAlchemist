@@ -1,3 +1,4 @@
+/// <reference lib="webworker" />
 import type { ConvertJob, WorkerMessage } from "../types/image";
 import { convertImage } from "../lib/image/convert";
 
