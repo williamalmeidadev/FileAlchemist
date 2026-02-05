@@ -91,11 +91,8 @@ p {
 .brand__logo {
   width: 56px;
   height: 56px;
-  object-fit: cover;
+  object-fit: contain;
   object-position: left center;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--surface);
 }
 
 .brand__top {
