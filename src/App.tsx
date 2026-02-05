@@ -212,6 +212,16 @@ export default function App() {
     [jobs]
   );
 
+  const handleRemove = (id: string) => {
+    updateJobs((current) => {
+      const target = current.find((job) => job.id === id);
+      if (target?.downloadUrl) {
+        URL.revokeObjectURL(target.downloadUrl);
+      }
+      return current.filter((job) => job.id !== id);
+    });
+  };
+
   const getOutputName = (job: JobItem): string => {
     const format = job.outputFormat ?? settings.outputFormat;
     const extension = format === "jpeg" ? "jpg" : format;
@@ -223,49 +233,19 @@ export default function App() {
     <div className="app">
       <header className="app__header">
         <div className="brand">
-          <div className="brand__top">
-            <span className="badge">Private • Local</span>
-            <button
-              type="button"
-              className="iconbtn"
-              onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
-              aria-label="Toggle theme"
-              title="Toggle theme"
-            >
-              {theme === "dark" ? "☀️" : "🌙"}
-            </button>
-          </div>
-
           <h1 className="brand__title">FileAlchemist</h1>
           <p className="brand__subtitle">Convert PNG/JPG/WebP locally. No uploads.</p>
         </div>
 
-        <div className="header__panel">
-          <div className="chips" aria-label="Queue summary">
-            <span className="chip">
-              <span className="dot dot--muted" /> Total <b>{summary.total}</b>
-            </span>
-            <span className="chip">
-              <span className="dot dot--warn" /> Pending <b>{summary.pending}</b>
-            </span>
-            <span className="chip">
-              <span className="dot dot--ok" /> Done <b>{summary.done}</b>
-            </span>
-            <span className="chip">
-              <span className="dot dot--bad" /> Errors <b>{summary.errors}</b>
-            </span>
-          </div>
-
-          <div className="progress">
-            <div className="progress__bar" style={{ width: `${progress.pct}%` }} />
-          </div>
-          <div className="progress__meta">
-            <span>{progress.pct}%</span>
-            <span>
-              {progress.completed}/{progress.total || 0} processed
-            </span>
-          </div>
-        </div>
+        <button
+          type="button"
+          className="iconbtn"
+          onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
+          aria-label="Toggle theme"
+          title="Toggle theme"
+        >
+          {theme === "dark" ? "☀️" : "🌙"}
+        </button>
       </header>
 
       <main className="app__main">
@@ -307,6 +287,36 @@ export default function App() {
           </p>
           </div>
 
+          <div className="panel queue-summary">
+            <div className="panel__title">
+              <h2>Queue summary</h2>
+            </div>
+            <div className="chips" aria-label="Queue summary">
+              <span className="chip">
+                <span className="dot dot--muted" /> Total <b>{summary.total}</b>
+              </span>
+              <span className="chip">
+                <span className="dot dot--warn" /> Pending <b>{summary.pending}</b>
+              </span>
+              <span className="chip">
+                <span className="dot dot--ok" /> Done <b>{summary.done}</b>
+              </span>
+              <span className="chip">
+                <span className="dot dot--bad" /> Errors <b>{summary.errors}</b>
+              </span>
+            </div>
+
+            <div className="progress">
+              <div className="progress__bar" style={{ width: `${progress.pct}%` }} />
+            </div>
+            <div className="progress__meta">
+              <span>{progress.pct}%</span>
+              <span>
+                {progress.completed}/{progress.total || 0} processed
+              </span>
+            </div>
+          </div>
+
           {!jobs.length ? (
             <div className="empty">
               <div className="empty__card">
@@ -317,7 +327,11 @@ export default function App() {
               </div>
             </div>
           ) : (
-            <QueueList jobs={jobs} getOutputName={getOutputName} />
+            <QueueList
+              jobs={jobs}
+              getOutputName={getOutputName}
+              onRemove={handleRemove}
+            />
           )}
         </section>
 

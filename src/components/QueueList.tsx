@@ -4,9 +4,21 @@ import { formatBytes } from "../lib/format";
 interface QueueListProps {
   jobs: JobItem[];
   getOutputName: (job: JobItem) => string;
+  onRemove: (id: string) => void;
 }
 
-export default function QueueList({ jobs, getOutputName }: QueueListProps) {
+function formatOutputLabel(job: JobItem): string {
+  const input = job.file.type.includes("png")
+    ? "PNG"
+    : job.file.type.includes("webp")
+    ? "WEBP"
+    : "JPG";
+  const outputFormat = job.outputFormat ?? "png";
+  const output = outputFormat === "jpeg" ? "JPG" : outputFormat.toUpperCase();
+  return `${input} → ${output}`;
+}
+
+export default function QueueList({ jobs, getOutputName, onRemove }: QueueListProps) {
   if (!jobs.length) {
     return (
       <section className="panel">
@@ -30,6 +42,10 @@ export default function QueueList({ jobs, getOutputName }: QueueListProps) {
                   <span>→ {formatBytes(job.result.size)}</span>
                 )}
               </div>
+              <div className="queue__format">
+                <span className={`status-dot status-dot--${job.status}`} />
+                <span>{formatOutputLabel(job)}</span>
+              </div>
               {job.error && <div className="queue__error">{job.error}</div>}
             </div>
             <div className="queue__actions">
@@ -43,6 +59,13 @@ export default function QueueList({ jobs, getOutputName }: QueueListProps) {
                   Download
                 </a>
               )}
+              <button
+                type="button"
+                className="btn btn--ghost"
+                onClick={() => onRemove(job.id)}
+              >
+                Remove
+              </button>
             </div>
           </div>
         ))}
