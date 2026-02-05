@@ -9,6 +9,10 @@ interface QueueListProps {
     queueTitle: string;
     download: string;
     remove: string;
+    statusPending: string;
+    statusProcessing: string;
+    statusDone: string;
+    statusError: string;
   };
 }
 
@@ -24,6 +28,21 @@ function formatOutputLabel(job: JobItem): string {
 }
 
 export default function QueueList({ jobs, getOutputName, onRemove, copy }: QueueListProps) {
+  const statusLabel = (status: JobItem["status"]) => {
+    switch (status) {
+      case "pending":
+        return copy.statusPending;
+      case "processing":
+        return copy.statusProcessing;
+      case "done":
+        return copy.statusDone;
+      case "error":
+        return copy.statusError;
+      default:
+        return status;
+    }
+  };
+
   return (
     <section className="panel">
       <h2>{copy.queueTitle}</h2>
@@ -52,7 +71,7 @@ export default function QueueList({ jobs, getOutputName, onRemove, copy }: Queue
               {job.error && <div className="queue__error">{job.error}</div>}
             </div>
             <div className="queue__actions">
-              <span className="queue__status">{job.status}</span>
+              <span className="queue__status">{statusLabel(job.status)}</span>
               {job.status === "done" && job.downloadUrl && (
                 <a
                   className="btn btn--ghost"
