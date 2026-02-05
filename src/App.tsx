@@ -5,6 +5,7 @@ import SettingsPanel from "./components/SettingsPanel";
 import { createId } from "./lib/id";
 import { isSupportedInput } from "./lib/image/formats";
 import { detectWebpSupport } from "./lib/image/support";
+import { downloadZip } from "./lib/zip";
 import type { ConvertSettings, WorkerMessage } from "./types/image";
 import type { JobItem } from "./types/job";
 
@@ -21,6 +22,7 @@ export default function App() {
   const [jobs, setJobs] = useState<JobItem[]>([]);
   const [settings, setSettings] = useState<ConvertSettings>(DEFAULT_SETTINGS);
   const [isConverting, setIsConverting] = useState(false);
+  const [isZipping, setIsZipping] = useState(false);
   const [webpSupported, setWebpSupported] = useState(true);
 
   const workerRef = useRef<Worker | null>(null);
@@ -161,6 +163,19 @@ export default function App() {
     updateJobs(() => []);
   };
 
+  const handleDownloadZip = async () => {
+    if (isZipping) return;
+    const readyJobs = jobsRef.current.filter((job) => job.status === "done" && job.result);
+    if (!readyJobs.length) return;
+
+    setIsZipping(true);
+    try {
+      await downloadZip(readyJobs, getOutputName);
+    } finally {
+      setIsZipping(false);
+    }
+  };
+
   const summary = useMemo(() => {
     const total = jobs.length;
     const done = jobs.filter((job) => job.status === "done").length;
@@ -168,6 +183,11 @@ export default function App() {
     const errors = jobs.filter((job) => job.status === "error").length;
     return { total, done, pending, errors };
   }, [jobs]);
+
+  const doneJobs = useMemo(
+    () => jobs.filter((job) => job.status === "done" && job.result),
+    [jobs]
+  );
 
   const getOutputName = (job: JobItem): string => {
     const format = job.outputFormat ?? settings.outputFormat;
@@ -207,7 +227,12 @@ export default function App() {
             <button type="button" className="btn btn--ghost" onClick={handleClear}>
               Clear
             </button>
-            <button type="button" className="btn btn--ghost" disabled>
+            <button
+              type="button"
+              className="btn btn--ghost"
+              onClick={handleDownloadZip}
+              disabled={!doneJobs.length || isZipping}
+            >
               Download ZIP
             </button>
           </div>
