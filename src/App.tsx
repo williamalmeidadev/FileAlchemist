@@ -257,151 +257,152 @@ export default function App() {
   const copy = COPY[language];
 
   return (
-    <div className="app">
-      <header className="app__header">
-        <div className="brand">
-          <img
-            className="brand__logo"
-            src={theme === "dark" ? logoLight : logoDark}
-            alt="FileAlchemist logo"
-          />
-        </div>
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--text)]">
+      <div className="mx-auto grid min-h-screen max-w-6xl gap-8 px-5 py-8">
+        <header className="flex flex-wrap items-start justify-between gap-6">
+          <div className="flex items-center gap-4">
+            <img
+              className="h-[84px] w-auto max-w-[360px] object-contain object-left"
+              src={theme === "dark" ? logoLight : logoDark}
+              alt="FileAlchemist logo"
+            />
+          </div>
 
-        <div className="header__actions">
-          <button
-            type="button"
-            className="iconbtn"
-            onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
-            aria-label={copy.themeToggle}
-            title={copy.themeToggle}
-          >
-            {theme === "dark" ? "☀️" : "🌙"}
-          </button>
-          <button
-            type="button"
-            className="iconbtn"
-            onClick={() => setLanguage((current) => (current === "pt" ? "en" : "pt"))}
-            aria-label={copy.languageToggle}
-            title={copy.languageToggle}
-          >
-            {language === "pt" ? "🇧🇷" : "🇺🇸"}
-          </button>
-        </div>
-      </header>
-
-      <main className="app__main">
-        <section className="left-stack">
-          <div className="panel">
-            <div className="panel__title">
-              <h2>{copy.dropTitle}</h2>
-              <span className="helper">
-                {summary.total} {copy.inQueue}
-              </span>
-            </div>
-          <Dropzone
-            onFilesAdded={handleFilesAdded}
-            accept={ACCEPT}
-            title={copy.dropzoneTitle}
-            subtitle={copy.dropzoneSubtitle}
-          />
-          <div className="panel__actions">
+          <div className="flex items-center gap-3">
             <button
               type="button"
-              className="btn"
-              onClick={handleConvert}
-              disabled={!jobs.length || isConverting}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] shadow-[var(--panel-shadow)] transition hover:-translate-y-0.5"
+              onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
+              aria-label={copy.themeToggle}
+              title={copy.themeToggle}
             >
-              {isConverting ? copy.dropActionConverting : copy.dropActionPrimary}
+              {theme === "dark" ? "☀️" : "🌙"}
             </button>
             <button
               type="button"
-              className="btn btn--ghost"
-              onClick={handleDownloadZip}
-              disabled={!doneJobs.length || isZipping}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] shadow-[var(--panel-shadow)] transition hover:-translate-y-0.5"
+              onClick={() => setLanguage((current) => (current === "pt" ? "en" : "pt"))}
+              aria-label={copy.languageToggle}
+              title={copy.languageToggle}
             >
-              {isZipping ? copy.dropActionZipping : copy.dropActionZip}
-            </button>
-            <button
-              type="button"
-              className="btn btn--danger"
-              onClick={handleClear}
-              disabled={!jobs.length}
-            >
-              {copy.dropActionClear}
+              {language === "pt" ? "🇧🇷" : "🇺🇸"}
             </button>
           </div>
-          <p className="helper">
-            {copy.dropHelper}
-          </p>
-          </div>
+        </header>
 
-          <div className="panel queue-summary">
-            <div className="panel__title">
-              <h2>{copy.queueSummaryTitle}</h2>
-            </div>
-            <div className="chips" aria-label="Queue summary">
-              <span className="chip">
-                <span className="dot dot--muted" /> {copy.queueTotal} <b>{summary.total}</b>
-              </span>
-              <span className="chip">
-                <span className="dot dot--warn" /> {copy.queuePending} <b>{summary.pending}</b>
-              </span>
-              <span className="chip">
-                <span className="dot dot--ok" /> {copy.queueDone} <b>{summary.done}</b>
-              </span>
-              <span className="chip">
-                <span className="dot dot--bad" /> {copy.queueErrors} <b>{summary.errors}</b>
-              </span>
+        <main className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
+          <section className="grid gap-6">
+            <div className="grid gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-soft)]">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <h2 className="text-lg font-semibold">{copy.dropTitle}</h2>
+                <span className="text-xs text-[var(--muted)]">
+                  {summary.total} {copy.inQueue}
+                </span>
+              </div>
+              <Dropzone
+                onFilesAdded={handleFilesAdded}
+                accept={ACCEPT}
+                title={copy.dropzoneTitle}
+                subtitle={copy.dropzoneSubtitle}
+              />
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-[var(--bg)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+                  onClick={handleConvert}
+                  disabled={!jobs.length || isConverting}
+                >
+                  {isConverting ? copy.dropActionConverting : copy.dropActionPrimary}
+                </button>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center rounded-full border border-[var(--border)] px-5 py-2 text-sm font-semibold text-[var(--text)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+                  onClick={handleDownloadZip}
+                  disabled={!doneJobs.length || isZipping}
+                >
+                  {isZipping ? copy.dropActionZipping : copy.dropActionZip}
+                </button>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center rounded-full border border-[var(--danger)]/40 px-5 py-2 text-sm font-semibold text-[var(--danger)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+                  onClick={handleClear}
+                  disabled={!jobs.length}
+                >
+                  {copy.dropActionClear}
+                </button>
+              </div>
+              <p className="text-xs text-[var(--muted)]">{copy.dropHelper}</p>
             </div>
 
-            <div className="progress">
-              <div className="progress__bar" style={{ width: `${progress.pct}%` }} />
-            </div>
-            <div className="progress__meta">
-              <span>{progress.pct}%</span>
-              <span>
-                {progress.completed}/{progress.total || 0} {copy.progressProcessed}
-              </span>
-            </div>
-          </div>
+            <div className="grid gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[var(--shadow-soft)]">
+              <h2 className="text-lg font-semibold">{copy.queueSummaryTitle}</h2>
+              <div className="flex flex-wrap gap-2">
+                <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1 text-xs text-[var(--muted)]">
+                  <span className="h-2 w-2 rounded-full bg-[#94a3b8]" /> {copy.queueTotal}{" "}
+                  <b className="text-[var(--text)]">{summary.total}</b>
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1 text-xs text-[var(--muted)]">
+                  <span className="h-2 w-2 rounded-full bg-[#f59e0b]" /> {copy.queuePending}{" "}
+                  <b className="text-[var(--text)]">{summary.pending}</b>
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1 text-xs text-[var(--muted)]">
+                  <span className="h-2 w-2 rounded-full bg-[#22c55e]" /> {copy.queueDone}{" "}
+                  <b className="text-[var(--text)]">{summary.done}</b>
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1 text-xs text-[var(--muted)]">
+                  <span className="h-2 w-2 rounded-full bg-[#ef4444]" /> {copy.queueErrors}{" "}
+                  <b className="text-[var(--text)]">{summary.errors}</b>
+                </span>
+              </div>
 
-          {!jobs.length ? (
-            <div className="empty">
-              <div className="empty__card">
-                <p className="empty__title">{copy.emptyTitle}</p>
-                <p className="empty__subtitle">{copy.emptySubtitle}</p>
+              <div className="h-2 w-full overflow-hidden rounded-full border border-[var(--border)] bg-[var(--surface-2)]">
+                <div
+                  className="h-full rounded-full bg-[var(--accent)] transition-all"
+                  style={{ width: `${progress.pct}%` }}
+                />
+              </div>
+              <div className="flex justify-between text-xs text-[var(--muted)]">
+                <span>{progress.pct}%</span>
+                <span>
+                  {progress.completed}/{progress.total || 0} {copy.progressProcessed}
+                </span>
               </div>
             </div>
-          ) : (
-            <QueueList
-              jobs={jobs}
-              getOutputName={getOutputName}
-              onRemove={handleRemove}
+
+            {!jobs.length ? (
+              <div className="grid place-items-center py-4">
+                <div className="w-full rounded-2xl border border-dashed border-[var(--border)] bg-[var(--surface)] p-5 text-left">
+                  <p className="mb-1 font-semibold text-[var(--text)]">{copy.emptyTitle}</p>
+                  <p className="text-sm text-[var(--muted)]">{copy.emptySubtitle}</p>
+                </div>
+              </div>
+            ) : (
+              <QueueList jobs={jobs} getOutputName={getOutputName} onRemove={handleRemove} copy={copy} />
+            )}
+          </section>
+
+          <section className="lg:sticky lg:top-5">
+            <SettingsPanel
+              settings={settings}
+              onChange={setSettings}
+              webpSupported={webpSupported}
+              onReset={() => setSettings(DEFAULT_SETTINGS)}
               copy={copy}
             />
-          )}
-        </section>
+          </section>
+        </main>
 
-        <section className="right-stack">
-          <SettingsPanel
-            settings={settings}
-            onChange={setSettings}
-            webpSupported={webpSupported}
-            onReset={() => setSettings(DEFAULT_SETTINGS)}
-            copy={copy}
-          />
-        </section>
-      </main>
-      <footer className="app__footer">
-        <a
-          className="footer__link"
-          href="https://williamalmeida.dev"
-          target="_blank"
-          rel="noreferrer"
-        >
-          {copy.footer}
-        </a>
-      </footer>
+        <footer className="mt-auto border-t border-[var(--border)] pt-5 text-center">
+          <a
+            className="text-xs text-[var(--muted)] hover:text-[var(--text)]"
+            href="https://williamalmeida.dev"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {copy.footer}
+          </a>
+        </footer>
+      </div>
     </div>
   );
 }
