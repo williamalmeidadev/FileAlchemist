@@ -365,11 +365,36 @@ select {
   border-radius: 12px;
   background: var(--drop-bg);
   border: 1px solid var(--border);
+  align-items: flex-start;
+}
+
+.queue__preview {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.queue__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.queue__preview--empty {
+  width: 100%;
+  height: 100%;
+  background: var(--surface-2);
 }
 
 .queue__meta {
   display: grid;
   gap: 4px;
+  flex: 1;
 }
 
 .queue__name {

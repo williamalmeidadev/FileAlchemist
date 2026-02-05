@@ -34,6 +34,13 @@ export default function QueueList({ jobs, getOutputName, onRemove }: QueueListPr
       <div className="queue">
         {jobs.map((job) => (
           <div key={job.id} className={`queue__item queue__item--${job.status}`}>
+            <div className="queue__preview">
+              {job.previewUrl ? (
+                <img src={job.previewUrl} alt={job.file.name} loading="lazy" />
+              ) : (
+                <div className="queue__preview--empty" />
+              )}
+            </div>
             <div className="queue__meta">
               <div className="queue__name">{job.file.name}</div>
               <div className="queue__sizes">

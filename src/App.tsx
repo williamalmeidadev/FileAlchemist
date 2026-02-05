@@ -136,6 +136,9 @@ export default function App() {
         if (job.downloadUrl) {
           URL.revokeObjectURL(job.downloadUrl);
         }
+        if (job.previewUrl) {
+          URL.revokeObjectURL(job.previewUrl);
+        }
       });
     };
   }, []);
@@ -150,6 +153,7 @@ export default function App() {
         id: createId(),
         file,
         status: "pending",
+        previewUrl: URL.createObjectURL(file),
       })),
     ]);
   };
@@ -164,6 +168,9 @@ export default function App() {
     jobsRef.current.forEach((job) => {
       if (job.downloadUrl) {
         URL.revokeObjectURL(job.downloadUrl);
+      }
+      if (job.previewUrl) {
+        URL.revokeObjectURL(job.previewUrl);
       }
     });
     setIsConverting(false);
@@ -217,6 +224,9 @@ export default function App() {
       const target = current.find((job) => job.id === id);
       if (target?.downloadUrl) {
         URL.revokeObjectURL(target.downloadUrl);
+      }
+      if (target?.previewUrl) {
+        URL.revokeObjectURL(target.previewUrl);
       }
       return current.filter((job) => job.id !== id);
     });
