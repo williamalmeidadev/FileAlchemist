@@ -260,8 +260,6 @@ export default function App() {
       <header className="app__header">
         <div className="brand">
           <img className="brand__logo" src={logo} alt="FileAlchemist logo" />
-          <h1 className="brand__title">{copy.brandTitle}</h1>
-          <p className="brand__subtitle">{copy.brandSubtitle}</p>
         </div>
 
         <div className="header__actions">
