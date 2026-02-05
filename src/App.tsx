@@ -206,7 +206,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="app__header">
-        <div>
+        <div className="header__left">
           <p className="eyebrow">Private image converter</p>
           <h1>FileAlchemist</h1>
           <p>Convert images locally. No uploads, no servers.</p>
@@ -230,8 +230,12 @@ export default function App() {
       </header>
 
       <main className="app__main">
-        <section className="panel">
-          <h2>Drop files</h2>
+        <section className="left-stack">
+          <div className="panel">
+            <div className="panel__title">
+              <h2>Drop files</h2>
+              <span className="helper">{summary.total} in queue</span>
+            </div>
           <Dropzone onFilesAdded={handleFilesAdded} accept={ACCEPT} />
           <div className="panel__actions">
             <button
@@ -257,15 +261,18 @@ export default function App() {
           <p className="helper">
             Supported: PNG, JPG/JPEG, WebP. Processing stays on your device.
           </p>
+          </div>
+
+          <QueueList jobs={jobs} getOutputName={getOutputName} />
         </section>
 
-        <SettingsPanel
-          settings={settings}
-          onChange={setSettings}
-          webpSupported={webpSupported}
-        />
-
-        <QueueList jobs={jobs} getOutputName={getOutputName} />
+        <section className="right-stack">
+          <SettingsPanel
+            settings={settings}
+            onChange={setSettings}
+            webpSupported={webpSupported}
+          />
+        </section>
       </main>
     </div>
   );
