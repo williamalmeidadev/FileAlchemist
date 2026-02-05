@@ -5,6 +5,7 @@ import SettingsPanel from "./components/SettingsPanel";
 import { createId } from "./lib/id";
 import { isSupportedInput } from "./lib/image/formats";
 import { detectWebpSupport } from "./lib/image/support";
+import { applyTheme, getInitialTheme, persistTheme, type ThemeMode } from "./lib/theme";
 import { downloadZip } from "./lib/zip";
 import type { ConvertSettings, WorkerMessage } from "./types/image";
 import type { JobItem } from "./types/job";
@@ -24,6 +25,7 @@ export default function App() {
   const [isConverting, setIsConverting] = useState(false);
   const [isZipping, setIsZipping] = useState(false);
   const [webpSupported, setWebpSupported] = useState(true);
+  const [theme, setTheme] = useState<ThemeMode>(() => getInitialTheme());
 
   const workerRef = useRef<Worker | null>(null);
   const jobsRef = useRef<JobItem[]>([]);
@@ -44,6 +46,11 @@ export default function App() {
   useEffect(() => {
     setWebpSupported(detectWebpSupport());
   }, []);
+
+  useEffect(() => {
+    applyTheme(theme);
+    persistTheme(theme);
+  }, [theme]);
 
   useEffect(() => {
     if (!webpSupported && settings.outputFormat === "webp") {
@@ -200,14 +207,25 @@ export default function App() {
     <div className="app">
       <header className="app__header">
         <div>
+          <p className="eyebrow">Private image converter</p>
           <h1>FileAlchemist</h1>
           <p>Convert images locally. No uploads, no servers.</p>
         </div>
-        <div className="summary">
-          <span>Total: {summary.total}</span>
-          <span>Pending: {summary.pending}</span>
-          <span>Done: {summary.done}</span>
-          <span>Errors: {summary.errors}</span>
+        <div className="header__right">
+          <div className="summary">
+            <span>Total: {summary.total}</span>
+            <span>Pending: {summary.pending}</span>
+            <span>Done: {summary.done}</span>
+            <span>Errors: {summary.errors}</span>
+          </div>
+          <button
+            type="button"
+            className="btn btn--ghost"
+            onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
+            aria-label="Toggle theme"
+          >
+            {theme === "dark" ? "Light theme" : "Dark theme"}
+          </button>
         </div>
       </header>
 
