@@ -5,6 +5,11 @@ interface QueueListProps {
   jobs: JobItem[];
   getOutputName: (job: JobItem) => string;
   onRemove: (id: string) => void;
+  copy: {
+    queueTitle: string;
+    download: string;
+    remove: string;
+  };
 }
 
 function formatOutputLabel(job: JobItem): string {
@@ -18,19 +23,10 @@ function formatOutputLabel(job: JobItem): string {
   return `${input} → ${output}`;
 }
 
-export default function QueueList({ jobs, getOutputName, onRemove }: QueueListProps) {
-  if (!jobs.length) {
-    return (
-      <section className="panel">
-        <h2>Queue</h2>
-        <p>No files yet.</p>
-      </section>
-    );
-  }
-
+export default function QueueList({ jobs, getOutputName, onRemove, copy }: QueueListProps) {
   return (
     <section className="panel">
-      <h2>Queue</h2>
+      <h2>{copy.queueTitle}</h2>
       <div className="queue">
         {jobs.map((job) => (
           <div key={job.id} className={`queue__item queue__item--${job.status}`}>
@@ -63,7 +59,7 @@ export default function QueueList({ jobs, getOutputName, onRemove }: QueueListPr
                   href={job.downloadUrl}
                   download={getOutputName(job)}
                 >
-                  Download
+                  {copy.download}
                 </a>
               )}
               <button
@@ -71,7 +67,7 @@ export default function QueueList({ jobs, getOutputName, onRemove }: QueueListPr
                 className="btn btn--ghost"
                 onClick={() => onRemove(job.id)}
               >
-                Remove
+                {copy.remove}
               </button>
             </div>
           </div>

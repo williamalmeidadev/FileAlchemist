@@ -6,6 +6,12 @@ import { createId } from "./lib/id";
 import { isSupportedInput } from "./lib/image/formats";
 import { detectWebpSupport } from "./lib/image/support";
 import { applyTheme, getInitialTheme, persistTheme, type ThemeMode } from "./lib/theme";
+import {
+  COPY,
+  getInitialLanguage,
+  persistLanguage,
+  type Language,
+} from "./lib/i18n";
 import { downloadZip } from "./lib/zip";
 import type { ConvertSettings, WorkerMessage } from "./types/image";
 import type { JobItem } from "./types/job";
@@ -26,6 +32,7 @@ export default function App() {
   const [isZipping, setIsZipping] = useState(false);
   const [webpSupported, setWebpSupported] = useState(true);
   const [theme, setTheme] = useState<ThemeMode>(() => getInitialTheme());
+  const [language, setLanguage] = useState<Language>(() => getInitialLanguage());
 
   const workerRef = useRef<Worker | null>(null);
   const jobsRef = useRef<JobItem[]>([]);
@@ -51,6 +58,10 @@ export default function App() {
     applyTheme(theme);
     persistTheme(theme);
   }, [theme]);
+
+  useEffect(() => {
+    persistLanguage(language);
+  }, [language]);
 
   useEffect(() => {
     if (!webpSupported && settings.outputFormat === "webp") {
@@ -241,33 +252,53 @@ export default function App() {
     return `${baseName}.${extension}`;
   };
 
+  const copy = COPY[language];
+
   return (
     <div className="app">
       <header className="app__header">
         <div className="brand">
-          <h1 className="brand__title">FileAlchemist</h1>
-          <p className="brand__subtitle">Convert PNG/JPG/WebP locally. No uploads.</p>
+          <h1 className="brand__title">{copy.brandTitle}</h1>
+          <p className="brand__subtitle">{copy.brandSubtitle}</p>
         </div>
 
-        <button
-          type="button"
-          className="iconbtn"
-          onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
-          aria-label="Toggle theme"
-          title="Toggle theme"
-        >
-          {theme === "dark" ? "☀️" : "🌙"}
-        </button>
+        <div className="header__actions">
+          <button
+            type="button"
+            className="iconbtn"
+            onClick={() => setTheme((current) => (current === "dark" ? "light" : "dark"))}
+            aria-label={copy.themeToggle}
+            title={copy.themeToggle}
+          >
+            {theme === "dark" ? "☀️" : "🌙"}
+          </button>
+          <button
+            type="button"
+            className="iconbtn"
+            onClick={() => setLanguage((current) => (current === "pt" ? "en" : "pt"))}
+            aria-label={copy.languageToggle}
+            title={copy.languageToggle}
+          >
+            {language === "pt" ? "EN" : "PT"}
+          </button>
+        </div>
       </header>
 
       <main className="app__main">
         <section className="left-stack">
           <div className="panel">
             <div className="panel__title">
-              <h2>Drop files</h2>
-              <span className="helper">{summary.total} in queue</span>
+              <h2>{copy.dropTitle}</h2>
+              <span className="helper">
+                {summary.total} {copy.inQueue}
+              </span>
             </div>
-          <Dropzone onFilesAdded={handleFilesAdded} accept={ACCEPT} />
+          <Dropzone
+            onFilesAdded={handleFilesAdded}
+            accept={ACCEPT}
+            title={copy.dropzoneTitle}
+            subtitle={copy.dropzoneSubtitle}
+          />
           <div className="panel__actions">
             <button
               type="button"
@@ -275,7 +306,7 @@ export default function App() {
               onClick={handleConvert}
               disabled={!jobs.length || isConverting}
             >
-              {isConverting ? "Converting…" : "Convert"}
+              {isConverting ? copy.dropActionConverting : copy.dropActionPrimary}
             </button>
             <button
               type="button"
@@ -283,7 +314,7 @@ export default function App() {
               onClick={handleDownloadZip}
               disabled={!doneJobs.length || isZipping}
             >
-              {isZipping ? "Zipping…" : "Download ZIP"}
+              {isZipping ? copy.dropActionZipping : copy.dropActionZip}
             </button>
             <button
               type="button"
@@ -291,30 +322,30 @@ export default function App() {
               onClick={handleClear}
               disabled={!jobs.length}
             >
-              Clear
+              {copy.dropActionClear}
             </button>
           </div>
           <p className="helper">
-            Supported: PNG, JPG/JPEG, WebP. Processing stays on your device.
+            {copy.dropHelper}
           </p>
           </div>
 
           <div className="panel queue-summary">
             <div className="panel__title">
-              <h2>Queue summary</h2>
+              <h2>{copy.queueSummaryTitle}</h2>
             </div>
             <div className="chips" aria-label="Queue summary">
               <span className="chip">
-                <span className="dot dot--muted" /> Total <b>{summary.total}</b>
+                <span className="dot dot--muted" /> {copy.queueTotal} <b>{summary.total}</b>
               </span>
               <span className="chip">
-                <span className="dot dot--warn" /> Pending <b>{summary.pending}</b>
+                <span className="dot dot--warn" /> {copy.queuePending} <b>{summary.pending}</b>
               </span>
               <span className="chip">
-                <span className="dot dot--ok" /> Done <b>{summary.done}</b>
+                <span className="dot dot--ok" /> {copy.queueDone} <b>{summary.done}</b>
               </span>
               <span className="chip">
-                <span className="dot dot--bad" /> Errors <b>{summary.errors}</b>
+                <span className="dot dot--bad" /> {copy.queueErrors} <b>{summary.errors}</b>
               </span>
             </div>
 
@@ -324,7 +355,7 @@ export default function App() {
             <div className="progress__meta">
               <span>{progress.pct}%</span>
               <span>
-                {progress.completed}/{progress.total || 0} processed
+                {progress.completed}/{progress.total || 0} {copy.progressProcessed}
               </span>
             </div>
           </div>
@@ -332,10 +363,8 @@ export default function App() {
           {!jobs.length ? (
             <div className="empty">
               <div className="empty__card">
-                <p className="empty__title">No files yet</p>
-                <p className="empty__subtitle">
-                  Drop PNG/JPG/WebP to start. Everything stays on your device.
-                </p>
+                <p className="empty__title">{copy.emptyTitle}</p>
+                <p className="empty__subtitle">{copy.emptySubtitle}</p>
               </div>
             </div>
           ) : (
@@ -343,6 +372,7 @@ export default function App() {
               jobs={jobs}
               getOutputName={getOutputName}
               onRemove={handleRemove}
+              copy={copy}
             />
           )}
         </section>
@@ -352,9 +382,21 @@ export default function App() {
             settings={settings}
             onChange={setSettings}
             webpSupported={webpSupported}
+            onReset={() => setSettings(DEFAULT_SETTINGS)}
+            copy={copy}
           />
         </section>
       </main>
+      <footer className="app__footer">
+        <a
+          className="footer__link"
+          href="https://williamalmeida.dev"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {copy.footer}
+        </a>
+      </footer>
     </div>
   );
 }
