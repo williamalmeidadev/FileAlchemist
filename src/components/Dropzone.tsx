@@ -4,9 +4,17 @@ interface DropzoneProps {
   onFilesAdded: (files: File[]) => void;
   accept: string;
   disabled?: boolean;
+  title: string;
+  subtitle: string;
 }
 
-export default function Dropzone({ onFilesAdded, accept, disabled }: DropzoneProps) {
+export default function Dropzone({
+  onFilesAdded,
+  accept,
+  disabled,
+  title,
+  subtitle,
+}: DropzoneProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -56,9 +64,9 @@ export default function Dropzone({ onFilesAdded, accept, disabled }: DropzonePro
         onChange={(event) => handleFiles(event.target.files)}
         className="dropzone__input"
       />
-      <div>
-        <p className="dropzone__title">Drop images here</p>
-        <p className="dropzone__subtitle">or click to browse</p>
+      <div className="dropzone__content">
+        <p className="dropzone__title">{title}</p>
+        <p className="dropzone__subtitle">{subtitle}</p>
       </div>
     </div>
   );

@@ -5,6 +5,17 @@ interface SettingsPanelProps {
   settings: ConvertSettings;
   onChange: (settings: ConvertSettings) => void;
   webpSupported: boolean;
+  onReset: () => void;
+  copy: {
+    settingsTitle: string;
+    outputFormat: string;
+    quality: string;
+    jpegBackground: string;
+    width: string;
+    height: string;
+    maxDimension: string;
+    resetSettings: string;
+  };
 }
 
 const OUTPUT_OPTIONS: { value: OutputFormat; label: string }[] = [
@@ -19,14 +30,25 @@ const formatNumber = (value: string): number | undefined => {
   return Number.isFinite(parsed) ? parsed : undefined;
 };
 
-export default function SettingsPanel({ settings, onChange, webpSupported }: SettingsPanelProps) {
+export default function SettingsPanel({
+  settings,
+  onChange,
+  webpSupported,
+  onReset,
+  copy,
+}: SettingsPanelProps) {
   const quality = Math.round((settings.quality ?? 0.92) * 100);
 
   return (
     <section className="panel">
-      <h2>Settings</h2>
+      <div className="panel__title">
+        <h2>{copy.settingsTitle}</h2>
+        <button type="button" className="btn btn--ghost btn--sm" onClick={onReset}>
+          {copy.resetSettings}
+        </button>
+      </div>
       <div className="field">
-        <label htmlFor="output-format">Output format</label>
+        <label htmlFor="output-format">{copy.outputFormat}</label>
         <select
           id="output-format"
           value={settings.outputFormat}
@@ -49,7 +71,9 @@ export default function SettingsPanel({ settings, onChange, webpSupported }: Set
 
       {(settings.outputFormat === "jpeg" || settings.outputFormat === "webp") && (
         <div className="field">
-          <label htmlFor="quality">Quality ({quality}%)</label>
+          <label htmlFor="quality">
+            {copy.quality} ({quality}%)
+          </label>
           <input
             id="quality"
             type="range"
@@ -68,24 +92,31 @@ export default function SettingsPanel({ settings, onChange, webpSupported }: Set
 
       {settings.outputFormat === "jpeg" && (
         <div className="field">
-          <label htmlFor="background">JPEG background</label>
-          <input
-            id="background"
-            type="color"
-            value={settings.background ?? "#ffffff"}
-            onChange={(event) =>
-              onChange({
-                ...settings,
-                background: event.target.value,
-              })
-            }
-          />
+          <label htmlFor="background">{copy.jpegBackground}</label>
+          <div className="color-field">
+            <input
+              id="background"
+              type="color"
+              value={settings.background ?? "#ffffff"}
+              onChange={(event) =>
+                onChange({
+                  ...settings,
+                  background: event.target.value,
+                })
+              }
+            />
+            <span
+              className="color-preview"
+              style={{ backgroundColor: settings.background ?? "#ffffff" }}
+              aria-hidden="true"
+            />
+          </div>
         </div>
       )}
 
       <div className="field-row">
         <div className="field">
-          <label htmlFor="resize-width">Width (px)</label>
+          <label htmlFor="resize-width">{copy.width}</label>
           <input
             id="resize-width"
             type="number"
@@ -104,7 +135,7 @@ export default function SettingsPanel({ settings, onChange, webpSupported }: Set
           />
         </div>
         <div className="field">
-          <label htmlFor="resize-height">Height (px)</label>
+          <label htmlFor="resize-height">{copy.height}</label>
           <input
             id="resize-height"
             type="number"
@@ -125,7 +156,7 @@ export default function SettingsPanel({ settings, onChange, webpSupported }: Set
       </div>
 
       <div className="field">
-        <label htmlFor="max-dimension">Max dimension (px)</label>
+        <label htmlFor="max-dimension">{copy.maxDimension}</label>
         <input
           id="max-dimension"
           type="number"
