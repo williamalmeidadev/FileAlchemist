@@ -279,7 +279,7 @@ export default function App() {
             aria-label={copy.languageToggle}
             title={copy.languageToggle}
           >
-            {language === "pt" ? "EN" : "PT"}
+            {language === "pt" ? "🇧🇷" : "🇺🇸"}
           </button>
         </div>
       </header>
