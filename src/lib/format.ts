@@ -15,5 +15,7 @@ export function formatBytes(bytes: number): string {
     unitIndex += 1;
   }
 
-  return `${value.toFixed(value >= 10 ? 0 : 1)} ${units[unitIndex]}`;
+  const fixed = value >= 10 ? value.toFixed(0) : value.toFixed(1);
+  const trimmed = fixed.endsWith(".0") ? fixed.slice(0, -2) : fixed;
+  return `${trimmed} ${units[unitIndex]}`;
 }
