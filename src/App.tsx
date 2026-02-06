@@ -392,15 +392,17 @@ export default function App() {
           </section>
         </main>
 
-        <footer className="mt-auto border-t border-[var(--border)] pt-5 text-center">
+        <footer className="mt-auto border-t border-[var(--border)] pt-5 text-center text-xs text-[var(--muted)]">
           <a
-            className="text-xs text-[var(--muted)] hover:text-[var(--text)]"
+            className="hover:text-[var(--text)]"
             href="https://williamalmeida.dev"
             target="_blank"
             rel="noreferrer"
           >
             {copy.footer}
           </a>
+          <span className="mx-2">•</span>
+          <span>v1.0.0</span>
         </footer>
       </div>
     </div>
