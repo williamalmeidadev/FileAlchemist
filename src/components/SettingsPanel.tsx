@@ -15,6 +15,7 @@ interface SettingsPanelProps {
     height: string;
     maxDimension: string;
     resetSettings: string;
+    auto: string;
   };
 }
 
@@ -128,7 +129,7 @@ export default function SettingsPanel({
             id="resize-width"
             type="number"
             min={1}
-            placeholder="Auto"
+            placeholder={copy.auto}
             className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2"
             value={settings.resize?.width ?? ""}
             onChange={(event) =>
@@ -148,7 +149,7 @@ export default function SettingsPanel({
             id="resize-height"
             type="number"
             min={1}
-            placeholder="Auto"
+            placeholder={copy.auto}
             className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2"
             value={settings.resize?.height ?? ""}
             onChange={(event) =>
