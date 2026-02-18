@@ -3,6 +3,7 @@ import Dropzone from "./components/Dropzone";
 import QueueList from "./components/QueueList";
 import SettingsPanel from "./components/SettingsPanel";
 import { createId } from "./lib/id";
+import { filterUniqueFiles } from "./lib/fileIdentity";
 import { isSupportedInput } from "./lib/image/formats";
 import { detectWebpSupport } from "./lib/image/support";
 import { applyTheme, getInitialTheme, persistTheme, type ThemeMode } from "./lib/theme";
@@ -158,11 +159,15 @@ export default function App() {
 
   const handleFilesAdded = (files: File[]) => {
     const accepted = files.filter(isSupportedInput);
-    if (!accepted.length) return;
+    const uniqueFiles = filterUniqueFiles(
+      jobsRef.current.map((job) => job.file),
+      accepted
+    );
+    if (!uniqueFiles.length) return;
 
     updateJobs((current) => [
       ...current,
-      ...accepted.map((file) => ({
+      ...uniqueFiles.map((file) => ({
         id: createId(),
         file,
         status: "pending" as const,
