@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculateTargetSize } from "./resize";
+import { calculateTargetSize, MAX_DIMENSION } from "./resize";
 
 describe("calculateTargetSize", () => {
   it("keeps original size when no resize", () => {
@@ -17,6 +17,20 @@ describe("calculateTargetSize", () => {
     expect(calculateTargetSize(4000, 2000, { maxDimension: 1000 })).toEqual({
       width: 1000,
       height: 500,
+    });
+  });
+
+  it("ignores invalid resize values", () => {
+    expect(calculateTargetSize(1200, 800, { width: 0, height: -10, maxDimension: 0 })).toEqual({
+      width: 1200,
+      height: 800,
+    });
+  });
+
+  it("clamps explicit dimensions to MAX_DIMENSION", () => {
+    expect(calculateTargetSize(1200, 800, { width: MAX_DIMENSION + 500 })).toEqual({
+      width: MAX_DIMENSION,
+      height: 5333,
     });
   });
 });

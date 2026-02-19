@@ -2,6 +2,12 @@ import type { ResizeOptions } from "../../types/image";
 
 export const MAX_DIMENSION = 8000;
 
+function normalizeDimension(value: number | undefined): number | undefined {
+  if (!Number.isFinite(value)) return undefined;
+  if (!value || value <= 0) return undefined;
+  return Math.min(MAX_DIMENSION, Math.round(value));
+}
+
 export function calculateTargetSize(
   width: number,
   height: number,
@@ -10,25 +16,29 @@ export function calculateTargetSize(
   let targetWidth = width;
   let targetHeight = height;
 
-  if (resize?.width || resize?.height) {
-    if (resize.width && resize.height) {
-      targetWidth = resize.width;
-      targetHeight = resize.height;
-    } else if (resize.width) {
-      const ratio = resize.width / width;
-      targetWidth = resize.width;
+  const resizeWidth = normalizeDimension(resize?.width);
+  const resizeHeight = normalizeDimension(resize?.height);
+  const maxDimension = normalizeDimension(resize?.maxDimension);
+
+  if (resizeWidth || resizeHeight) {
+    if (resizeWidth && resizeHeight) {
+      targetWidth = resizeWidth;
+      targetHeight = resizeHeight;
+    } else if (resizeWidth) {
+      const ratio = resizeWidth / width;
+      targetWidth = resizeWidth;
       targetHeight = Math.round(height * ratio);
-    } else if (resize.height) {
-      const ratio = resize.height / height;
-      targetHeight = resize.height;
+    } else if (resizeHeight) {
+      const ratio = resizeHeight / height;
+      targetHeight = resizeHeight;
       targetWidth = Math.round(width * ratio);
     }
   }
 
-  if (resize?.maxDimension) {
+  if (maxDimension) {
     const max = Math.max(targetWidth, targetHeight);
-    if (max > resize.maxDimension) {
-      const ratio = resize.maxDimension / max;
+    if (max > maxDimension) {
+      const ratio = maxDimension / max;
       targetWidth = Math.round(targetWidth * ratio);
       targetHeight = Math.round(targetHeight * ratio);
     }
