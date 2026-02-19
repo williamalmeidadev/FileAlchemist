@@ -21,11 +21,16 @@ function splitFilename(name: string): { base: string; extension: string } {
   };
 }
 
+function sanitizeFilename(name: string): string {
+  const cleaned = name.replace(/[\\/]+/g, "_").trim();
+  return cleaned || "file";
+}
+
 export function ensureUniqueFilenames(names: string[]): string[] {
   const used = new Set<string>();
 
   return names.map((name) => {
-    const normalized = name.trim() || "file";
+    const normalized = sanitizeFilename(name);
     if (!used.has(normalized)) {
       used.add(normalized);
       return normalized;

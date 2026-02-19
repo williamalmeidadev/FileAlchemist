@@ -33,4 +33,12 @@ describe("ensureUniqueFilenames", () => {
       "file (3)",
     ]);
   });
+
+  it("sanitizes path separators before deduplicating", () => {
+    expect(ensureUniqueFilenames(["a/b.png", "a\\b.png", "a_b.png"])).toEqual([
+      "a_b.png",
+      "a_b (2).png",
+      "a_b (3).png",
+    ]);
+  });
 });
