@@ -1,4 +1,5 @@
 import { useRef, useState, type DragEvent } from "react";
+import { shouldTriggerFileDialog } from "../lib/dropzone";
 
 interface DropzoneProps {
   onFilesAdded: (files: File[]) => void;
@@ -51,7 +52,8 @@ export default function Dropzone({
       tabIndex={0}
       onClick={() => inputRef.current?.click()}
       onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
+        if (shouldTriggerFileDialog(event.key)) {
+          event.preventDefault();
           inputRef.current?.click();
         }
       }}
@@ -63,7 +65,10 @@ export default function Dropzone({
         multiple
         accept={accept}
         disabled={disabled}
-        onChange={(event) => handleFiles(event.target.files)}
+        onChange={(event) => {
+          handleFiles(event.target.files);
+          event.currentTarget.value = "";
+        }}
         className="hidden"
       />
       <div className="grid gap-1">
