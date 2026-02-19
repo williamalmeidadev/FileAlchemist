@@ -5,6 +5,7 @@ import SettingsPanel from "./components/SettingsPanel";
 import { createId } from "./lib/id";
 import { filterUniqueFiles } from "./lib/fileIdentity";
 import { isSupportedInput } from "./lib/image/formats";
+import { getPendingJobsCount } from "./lib/queue";
 import { detectWebpSupport } from "./lib/image/support";
 import { applyTheme, getInitialTheme, persistTheme, type ThemeMode } from "./lib/theme";
 import {
@@ -179,7 +180,7 @@ export default function App() {
   };
 
   const handleConvert = () => {
-    if (!jobsRef.current.length || isConverting) return;
+    if (!getPendingJobsCount(jobsRef.current) || isConverting) return;
     setIsConverting(true);
     processNext();
   };
@@ -315,7 +316,7 @@ export default function App() {
                   type="button"
                   className="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-5 py-2 text-sm font-semibold text-[var(--bg)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
                   onClick={handleConvert}
-                  disabled={!jobs.length || isConverting}
+                  disabled={summary.pending === 0 || isConverting}
                 >
                   {isConverting ? copy.dropActionConverting : copy.dropActionPrimary}
                 </button>
